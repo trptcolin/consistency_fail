@@ -6,13 +6,21 @@ Gem::Specification.new do |s|
   s.name        = "consistency_fail"
   s.version     = ConsistencyFail::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["Colin Jones"]
+  s.email       = ["colin@8thlight.com"]
+  s.homepage    = "http://github.com/trptcolin/consistency_fail"
+  s.summary     = %q{A tool to detect missing unique indexes}
+  s.description = <<-EOF
+With more than one application server, validates_uniqueness_of becomes a lie.
+Two app servers -> two requests -> two near-simultaneous uniqueness checks ->
+two processes that commit to the database independently, violating this faux
+constraint. You'll need a database-level constraint for cases like these.
 
-  s.rubyforge_project = "consistency_fail"
+consistency_fail will find your missing unique indexes, so you can add them and
+stop ignoring the C in ACID.
+EOF
+
+  s.add_dependency "validation_reflection", "~>0.3"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
