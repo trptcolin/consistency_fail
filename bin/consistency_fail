@@ -1,3 +1,15 @@
 #!/usr/bin/env ruby
 
 require "consistency_fail"
+
+engine = ConsistencyFail::Engine.new
+
+problems = engine.models.map do |m|
+  [m, engine.missing_indexes_on(m)]
+end.reject do |m, indexes|
+  indexes.empty?
+end
+
+reporter = ConsistencyFail::Reporter.new
+reporter.report(problems)
+

@@ -1,21 +1,32 @@
 # Consistency Fail
 
 ## Description
-consistency_fail is a tool to detect missing unique indexes in Rails projects.
+consistency\_fail is a tool to detect missing unique indexes in Rails projects.
 
-With more than one application server, validates_uniqueness_of becomes a lie.
+With more than one application server, `validates_uniqueness_of` becomes a lie.
 Two app servers -> two requests -> two near-simultaneous uniqueness checks ->
 two processes that commit to the database independently, violating this faux
 constraint. You'll need a database-level constraint for cases like these.
 
-consistency_fail will find your missing unique indexes, so you can add them and
+consistency\_fail will find your missing unique indexes, so you can add them and
 stop ignoring the C in ACID.
 
 ## Installation
 
     gem install consistency_fail
 
+## Limitations
+
 Currently only Rails 2.x is supported. Rails 3 support is coming soon.
+
+consistency\_fail depends on Rails making all the models available via
+
+    Kernel.subclasses_of(ActiveRecord::Base)
+
+If any models are unavailable after the Rails environment boots up (e.g. due to
+being in a nonstandard load path), consistency\_fail will be unable to analyze
+them.
+
 
 ## Usage
 
