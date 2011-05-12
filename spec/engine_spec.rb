@@ -70,10 +70,17 @@ describe ConsistencyFail::Engine do
     end
 
     it "finds one where the validation has scoped columns" do
+      @validation.stub!(:name => :city, :options => {:scope => [:email, :state]})
+      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+
+      subject.missing_indexes_on(@model).should == [["city", "email", "state"]]
+    end
+
+    it "sorts the scoped columns" do
       @validation.stub!(:name => :email, :options => {:scope => [:city, :state]})
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
-      subject.missing_indexes_on(@model).should == [["email", "city", "state"]]
+      subject.missing_indexes_on(@model).should == [["city", "email", "state"]]
     end
 
     it "finds none when they're already in place" do
