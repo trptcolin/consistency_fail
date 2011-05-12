@@ -3,6 +3,7 @@
 require "consistency_fail"
 
 engine = ConsistencyFail::Engine.new
+engine.preload_all_models
 
 problems = engine.models.map do |m|
   [m, engine.missing_indexes_on(m)]

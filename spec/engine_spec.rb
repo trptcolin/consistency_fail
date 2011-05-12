@@ -10,26 +10,6 @@ describe ConsistencyFail::Engine do
     double("index on #{columns.inspect}", :unique => true, :columns => columns)
   end
 
-  def stub_ar_subclasses!(models)
-    Kernel.stub!(:subclasses_of).
-           with(ActiveRecord::Base).
-           and_return(models)
-  end
-
-  it "gets all models" do
-    models = [fake_ar_model("Job"), fake_ar_model("User")]
-    stub_ar_subclasses!(models)
-
-    subject.models.should == models
-  end
-
-  it "sorts models by name" do
-    model_1, model_2 = fake_ar_model("User"), fake_ar_model("Job")
-    stub_ar_subclasses!([model_1, model_2])
-
-    subject.models.should == [model_2, model_1]
-  end
-
   describe "listing validates_uniqueness_of calls for a given model" do
     it "finds none" do
       model = fake_ar_model("User")
