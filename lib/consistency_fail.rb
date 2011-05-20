@@ -1,3 +1,4 @@
+require File.join(Dir.pwd, "config", "boot")
 require 'active_record'
 require 'validation_reflection'
 require File.join(Dir.pwd, "config", "environment")
