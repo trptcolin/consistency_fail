@@ -5,7 +5,9 @@ module ConsistencyFail
     MODEL_DIRECTORY_REGEXP = /models/
 
     def preload_all_models
-      model_dirs = Rails.configuration.load_paths.select{|lp| MODEL_DIRECTORY_REGEXP =~ lp}
+      model_dirs = $LOAD_PATH.select do |lp|
+        MODEL_DIRECTORY_REGEXP =~ lp
+      end
       model_dirs.each do |d|
         Dir.glob(File.join(d, "**", "*.rb")).each do |model_filename|
           require_dependency model_filename
