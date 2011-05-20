@@ -1,4 +1,10 @@
-require File.join(Dir.pwd, "config", "boot")
+begin
+  require File.join(Dir.pwd, "config", "boot")
+rescue LoadError => e
+  puts "\nUh-oh! You must be in the root directory of a Rails project.\n"
+  raise
+end
+
 require 'active_record'
 require 'validation_reflection'
 require File.join(Dir.pwd, "config", "environment")
