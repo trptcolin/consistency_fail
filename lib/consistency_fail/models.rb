@@ -5,12 +5,12 @@ module ConsistencyFail
   class Models
     MODEL_DIRECTORY_REGEXP = /models/
 
-    def self.model_dirs
+    def self.dirs
       $LOAD_PATH.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp }
     end
 
     def self.preload_all
-      self.model_dirs.each do |d|
+      self.dirs.each do |d|
         Dir.glob(File.join(d, "**", "*.rb")).each do |model_filename|
           Kernel.require_dependency model_filename
         end

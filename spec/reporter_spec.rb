@@ -27,7 +27,7 @@ describe ConsistencyFail::Reporter do
   end
 
   it "shows a missing multiple-column index on a single model" do
-    missing_indexes = [ConsistencyFail::Index.new("address", ["number", "street", "zip"])]
+    missing_indexes = [ConsistencyFail::Index.new("addresses", ["number", "street", "zip"])]
 
     subject.report_validates_uniqueness_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
 
