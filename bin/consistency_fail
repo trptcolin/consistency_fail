@@ -2,20 +2,19 @@
 
 require "consistency_fail"
 
-def problems(engine, introspector)
-  problems = engine.models.map do |m|
+def problems(models, introspector)
+  problems = models.map do |m|
     [m, introspector.missing_indexes(m)]
   end.reject do |m, indexes|
     indexes.empty?
   end
 end
 
-engine = ConsistencyFail::Engine.new
-engine.preload_all_models
+ConsistencyFail::Models.preload_all
 reporter = ConsistencyFail::Reporter.new
 
 validation_introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
-validates_uniqueness_of_problems = problems(engine, validation_introspector)
+validates_uniqueness_of_problems = problems(ConsistencyFail::Models.all, validation_introspector)
 reporter.report_validates_uniqueness_problems(validates_uniqueness_of_problems)
 
 #has_one_problems = engine.models.map do |m|

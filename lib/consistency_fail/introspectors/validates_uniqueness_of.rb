@@ -1,4 +1,3 @@
-require 'consistency_fail/engine'
 require 'consistency_fail/index'
 
 module ConsistencyFail

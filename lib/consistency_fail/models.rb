@@ -2,22 +2,22 @@ require 'active_record'
 require 'consistency_fail/index'
 
 module ConsistencyFail
-  class Engine
+  class Models
     MODEL_DIRECTORY_REGEXP = /models/
 
-    def model_dirs
+    def self.model_dirs
       $LOAD_PATH.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp }
     end
 
-    def preload_all_models
-      model_dirs.each do |d|
+    def self.preload_all
+      self.model_dirs.each do |d|
         Dir.glob(File.join(d, "**", "*.rb")).each do |model_filename|
           Kernel.require_dependency model_filename
         end
       end
     end
 
-    def models
+    def self.all
       models = []
       ObjectSpace.each_object do |o|
         models << o if o.class == Class &&
