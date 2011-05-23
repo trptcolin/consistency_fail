@@ -10,5 +10,6 @@ require 'validation_reflection'
 require File.join(Dir.pwd, "config", "environment")
 
 require 'consistency_fail/engine'
+require 'consistency_fail/introspectors/table_data'
 require 'consistency_fail/introspectors/validates_uniqueness_of'
 require 'consistency_fail/reporter'

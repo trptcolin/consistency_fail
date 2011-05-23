@@ -19,7 +19,7 @@ module ConsistencyFail
       private :desired_indexes
 
       def missing_indexes(model)
-        existing_indexes = ConsistencyFail::Engine.new.unique_indexes_on(model)
+        existing_indexes = ConsistencyFail::Introspectors::TableData.new.unique_indexes(model)
 
         desired_indexes(model).reject do |index|
           existing_indexes.include?(index)

@@ -27,15 +27,6 @@ module ConsistencyFail
       models.sort_by(&:name)
     end
 
-    def unique_indexes_on(model)
-      return [] if !model.table_exists?
-
-      ar_indexes = model.connection.indexes(model.table_name).select(&:unique)
-      ar_indexes.map do |index|
-        ConsistencyFail::Index.new(model.table_name, index.columns)
-      end
-    end
-
 #    # TODO: test
 #    def has_one_calls_on(model)
 #      model.reflect_on_all_associations.select do |a|
