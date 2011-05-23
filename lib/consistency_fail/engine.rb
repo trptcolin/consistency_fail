@@ -36,28 +36,6 @@ module ConsistencyFail
       end
     end
 
-    def uniqueness_validations_on(model)
-      model.reflect_on_all_validations.select do |v|
-        v.macro == :validates_uniqueness_of
-      end
-    end
-
-    def desired_indexes_for_validates_uniqueness_of_on(model)
-      uniqueness_validations_on(model).map do |v|
-        scoped_columns = v.options[:scope] || []
-        ConsistencyFail::Index.new(model.table_name, [v.name, *scoped_columns])
-      end
-    end
-    private :desired_indexes_for_validates_uniqueness_of_on
-
-    def missing_indexes_for_validates_uniqueness_on(model)
-      existing_indexes = unique_indexes_on(model)
-
-      desired_indexes_for_validates_uniqueness_of_on(model).reject do |index|
-        existing_indexes.include?(index)
-      end
-    end
-
 #    # TODO: test
 #    def has_one_calls_on(model)
 #      model.reflect_on_all_associations.select do |a|
