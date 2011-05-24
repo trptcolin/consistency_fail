@@ -13,9 +13,9 @@ end
 ConsistencyFail::Models.preload_all
 reporter = ConsistencyFail::Reporter.new
 
-validation_introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
-validates_uniqueness_of_problems = problems(ConsistencyFail::Models.all, validation_introspector)
-reporter.report_validates_uniqueness_problems(validates_uniqueness_of_problems)
+introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
+problems = problems(ConsistencyFail::Models.all, introspector)
+reporter.report_validates_uniqueness_problems(problems)
 
 #has_one_problems = engine.models.map do |m|
 #  [m, engine.missing_indexes_for_has_one_on(m)]
