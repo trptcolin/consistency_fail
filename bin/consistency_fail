@@ -17,10 +17,7 @@ introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
 problems = problems(ConsistencyFail::Models.all, introspector)
 reporter.report_validates_uniqueness_problems(problems)
 
-#has_one_problems = engine.models.map do |m|
-#  [m, engine.missing_indexes_for_has_one_on(m)]
-#end.reject do |m, indexes|
-#  indexes.empty?
-#end
-#reporter.report_has_one_problems(has_one_problems)
+introspector = ConsistencyFail::Introspectors::HasOne.new
+problems = problems(ConsistencyFail::Models.all, introspector)
+reporter.report_has_one_problems(problems)
 

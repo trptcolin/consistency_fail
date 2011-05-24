@@ -12,4 +12,5 @@ require File.join(Dir.pwd, "config", "environment")
 require 'consistency_fail/models'
 require 'consistency_fail/introspectors/table_data'
 require 'consistency_fail/introspectors/validates_uniqueness_of'
+require 'consistency_fail/introspectors/has_one'
 require 'consistency_fail/reporter'
