@@ -25,7 +25,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
     it "finds other validations, but not uniqueness" do
       model = fake_ar_model("User")
       validation = double("validation", :macro => :validates_format_of)
-      model.stub!(:reflect_on_all_validations).and_return([])
+      model.stub!(:reflect_on_all_validations).and_return([validation])
 
       subject.instances(model).should == []
     end

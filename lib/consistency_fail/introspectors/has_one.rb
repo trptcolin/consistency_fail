@@ -4,12 +4,12 @@ module ConsistencyFail
   module Introspectors
     class HasOne
 
-#    def has_one_calls_on(model)
-#      model.reflect_on_all_associations.select do |a|
-#        a.macro == :has_one
-#      end
-#    end
-#
+    def instances(model)
+      model.reflect_on_all_associations.select do |a|
+        a.macro == :has_one
+      end
+    end
+
 #    # TODO: handle has_one :through cases (multicolumn index on the join table?)
 #    def desired_indexes_for_has_one_on(model)
 #      has_one_calls_on(model).map do |v|
