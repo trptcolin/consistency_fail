@@ -19,7 +19,7 @@ module ConsistencyFail
       end
 
       def column_headers
-        ["Table", "Columns (multicolumn order is alphabetical)"]
+        ["Table", "Columns"]
       end
 
     end

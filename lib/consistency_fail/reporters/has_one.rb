@@ -19,7 +19,7 @@ module ConsistencyFail
       end
 
       def column_headers
-        ["Offending Model", "Desired Unique Index (order is irrelevant)"]
+        ["Offending Model", "Desired Unique Index"]
       end
     end
   end
