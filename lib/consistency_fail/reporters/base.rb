@@ -3,9 +3,21 @@ module ConsistencyFail
     class Base
       TERMINAL_WIDTH = 80
 
+      RED = 31
+      GREEN = 32
+
+      def use_color(code)
+        print "\e[#{code}m"
+      end
+
+      def use_default_color
+        use_color(0)
+      end
+
       def report_success(macro)
-        divider
+        use_color(GREEN)
         puts "Hooray! All calls to #{macro} are correctly backed by a unique index."
+        use_default_color
         divider
       end
 
@@ -15,10 +27,9 @@ module ConsistencyFail
 
       def report_failure_header(macro, longest_model_length)
         puts
-        divider(longest_model_length * 2)
-        divider(longest_model_length * 2)
-        puts "There are calls to #{macro} that aren't backed by unique indexes"
-        divider(longest_model_length * 2)
+        use_color(RED)
+        puts "There are calls to #{macro} that aren't backed by unique indexes."
+        use_default_color
         divider(longest_model_length * 2)
 
         column_1_header, column_2_header = column_headers
