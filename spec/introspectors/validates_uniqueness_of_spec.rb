@@ -60,7 +60,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["city", "email", "state"])]
+      indexes.should == [ConsistencyFail::Index.new("users", ["email", "city", "state"])]
     end
 
     it "finds none when they're already in place" do

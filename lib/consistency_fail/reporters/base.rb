@@ -5,7 +5,7 @@ module ConsistencyFail
 
       def report_success(macro)
         divider
-        puts "Hooray! All #{macro} calls are correctly backed by a unique index."
+        puts "Hooray! All calls to #{macro} are correctly backed by a unique index."
         divider
       end
 
@@ -16,7 +16,9 @@ module ConsistencyFail
       def report_failure_header(macro, longest_model_length)
         puts
         divider(longest_model_length * 2)
-        puts "#{macro} calls not backed by unique indexes"
+        divider(longest_model_length * 2)
+        puts "There are calls to #{macro} that aren't backed by unique indexes"
+        divider(longest_model_length * 2)
         divider(longest_model_length * 2)
 
         column_1_header, column_2_header = column_headers

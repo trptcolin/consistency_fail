@@ -10,10 +10,10 @@ describe ConsistencyFail::Index do
       index.columns.should == ["city", "state"]
     end
 
-    it "sorts columns (since we only care about presence, not performance)" do
+    it "leaves columns in the initial order (since we only care about presence, not performance)" do
       index = ConsistencyFail::Index.new("addresses", ["state", "city"])
       index.table_name.should == "addresses"
-      index.columns.should == ["city", "state"]
+      index.columns.should == ["state", "city"]
     end
   end
 
