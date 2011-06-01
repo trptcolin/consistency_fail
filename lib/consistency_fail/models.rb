@@ -5,11 +5,17 @@ module ConsistencyFail
   class Models
     MODEL_DIRECTORY_REGEXP = /models/
 
-    def self.dirs
-      $LOAD_PATH.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp }
+    attr_reader :load_path
+
+    def initialize(load_path)
+      @load_path = load_path
     end
 
-    def self.preload_all
+    def dirs
+      load_path.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp }
+    end
+
+    def preload_all
       self.dirs.each do |d|
         Dir.glob(File.join(d, "**", "*.rb")).each do |model_filename|
           Kernel.require_dependency model_filename
@@ -17,7 +23,7 @@ module ConsistencyFail
       end
     end
 
-    def self.all
+    def all
       models = []
       ObjectSpace.each_object do |o|
         models << o if o.class == Class &&

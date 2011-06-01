@@ -10,14 +10,16 @@ def problems(models, introspector)
   end
 end
 
-ConsistencyFail::Models.preload_all
+models = ConsistencyFail::Models.new($LOAD_PATH)
+models.preload_all
+
 reporter = ConsistencyFail::Reporter.new
 
 introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
-problems = problems(ConsistencyFail::Models.all, introspector)
+problems = problems(models.all, introspector)
 reporter.report_validates_uniqueness_problems(problems)
 
 introspector = ConsistencyFail::Introspectors::HasOne.new
-problems = problems(ConsistencyFail::Models.all, introspector)
+problems = problems(models.all, introspector)
 reporter.report_has_one_problems(problems)
 
