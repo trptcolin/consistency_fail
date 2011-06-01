@@ -68,7 +68,7 @@ describe ConsistencyFail::Reporter do
 
       subject.report_has_one_problems(fake_ar_model("Friend", :table_name => "users") => missing_indexes)
 
-      @fake_out.string.should =~ /Friend\s+users: \(email\)/m
+      @fake_out.string.should =~ /Friend\s+users\s+\(email\)/m
     end
   end
 end

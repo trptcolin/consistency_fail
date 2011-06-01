@@ -18,7 +18,6 @@ module ConsistencyFail
         use_color(GREEN)
         puts "Hooray! All calls to #{macro} are correctly backed by a unique index."
         use_default_color
-        divider
       end
 
       def divider(pad_to = TERMINAL_WIDTH)
@@ -39,12 +38,17 @@ module ConsistencyFail
         divider(longest_model_length * 2)
       end
 
-      def report_index(model, index, column_1_header)
-        raise "Unimplemented"
+      def report_index(model, index, column_1_length)
+        print model.name.ljust(column_1_length + 2)
+        puts "#{index.table_name} (#{index.columns.join(", ")})"
       end
 
       def column_1(model)
-        raise "Unimplemented"
+        model.name
+      end
+
+      def column_headers
+        ["Model", "Table Columns"]
       end
 
       def report(indexes_by_model)
