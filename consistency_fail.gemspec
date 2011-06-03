@@ -20,8 +20,7 @@ consistency_fail will find your missing unique indexes, so you can add them and
 stop ignoring the C in ACID.
 EOF
 
-  s.add_dependency "validation_reflection", "~>0.3.8"
-  s.add_development_dependency "activerecord", "~>2.3"
+  s.add_development_dependency "activerecord", "~>3.0"
   s.add_development_dependency "rspec"
 
   s.files         = `git ls-files`.split("\n")

@@ -6,9 +6,9 @@ rescue LoadError => e
 end
 
 require 'active_record'
-require 'validation_reflection'
 require File.join(Dir.pwd, "config", "environment")
 
+$:<< File.dirname(__FILE__)
 require 'consistency_fail/models'
 require 'consistency_fail/introspectors/table_data'
 require 'consistency_fail/introspectors/validates_uniqueness_of'

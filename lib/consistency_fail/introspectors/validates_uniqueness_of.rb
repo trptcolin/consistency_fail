@@ -4,16 +4,18 @@ module ConsistencyFail
   module Introspectors
     class ValidatesUniquenessOf
       def instances(model)
-        model.reflect_on_all_validations.select do |v|
-          v.macro == :validates_uniqueness_of
+        model.validators.select do |v|
+          v.class == ActiveRecord::Validations::UniquenessValidator
         end
       end
 
       def desired_indexes(model)
         instances(model).map do |v|
-          scoped_columns = v.options[:scope] || []
-          ConsistencyFail::Index.new(model.table_name, [v.name, *scoped_columns])
-        end
+          v.attributes.map do |attribute|
+            scoped_columns = v.options[:scope] || []
+            ConsistencyFail::Index.new(model.table_name, [attribute, *scoped_columns])
+          end
+        end.flatten
       end
       private :desired_indexes
 

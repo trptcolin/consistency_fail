@@ -9,23 +9,23 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
   describe "instances of validates_uniqueness_of" do
     it "finds none" do
       model = fake_ar_model("User")
-      model.stub!(:reflect_on_all_validations).and_return([])
+      model.stub!(:validators).and_return([])
 
       subject.instances(model).should == []
     end
 
     it "finds one" do
       model = fake_ar_model("User")
-      validation = double("validation", :macro => :validates_uniqueness_of)
-      model.stub!(:reflect_on_all_validations).and_return([validation])
+      validation = double("validation", :class => ActiveRecord::Validations::UniquenessValidator)
+      model.stub!(:validators).and_return([validation])
 
       subject.instances(model).should == [validation]
     end
 
     it "finds other validations, but not uniqueness" do
       model = fake_ar_model("User")
-      validation = double("validation", :macro => :validates_format_of)
-      model.stub!(:reflect_on_all_validations).and_return([validation])
+      validation = double("validation", :class => ActiveModel::Validations::FormatValidator)
+      model.stub!(:validators).and_return([validation])
 
       subject.instances(model).should == []
     end
@@ -33,14 +33,14 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
 
   describe "finding missing indexes" do
     before do
-      @validation = double("validation", :macro => :validates_uniqueness_of)
+      @validation = double("validation", :class => ActiveRecord::Validations::UniquenessValidator)
       @model = fake_ar_model("User", :table_exists? => true,
                                      :table_name => "users",
-                                     :reflect_on_all_validations => [@validation])
+                                     :validators => [@validation])
     end
 
     it "finds one" do
-      @validation.stub!(:name => :email, :options => {})
+      @validation.stub!(:attributes => [:email], :options => {})
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
@@ -48,23 +48,32 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
     end
 
     it "finds one where the validation has scoped columns" do
-      @validation.stub!(:name => :city, :options => {:scope => [:email, :state]})
+      @validation.stub!(:attributes => [:city], :options => {:scope => [:email, :state]})
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
       indexes.should == [ConsistencyFail::Index.new("users", ["city", "email", "state"])]
     end
 
-    it "sorts the scoped columns" do
-      @validation.stub!(:name => :email, :options => {:scope => [:city, :state]})
+    it "leaves the columns in the given order" do
+      @validation.stub!(:attributes => [:email], :options => {:scope => [:city, :state]})
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
       indexes.should == [ConsistencyFail::Index.new("users", ["email", "city", "state"])]
     end
 
+    it "finds two where there are multiple attributes" do
+      @validation.stub!(:attributes => [:email, :name], :options => {:scope => [:city, :state]})
+      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+
+      indexes = subject.missing_indexes(@model)
+      indexes.should == [ConsistencyFail::Index.new("users", ["email", "city", "state"]),
+                         ConsistencyFail::Index.new("users", ["name", "city", "state"])]
+    end
+
     it "finds none when they're already in place" do
-      @validation.stub!(:name => :email, :options => {})
+      @validation.stub!(:attributes => [:email], :options => {})
       index = fake_index_on(["email"], :unique => true)
       @model.stub_chain(:connection, :indexes).with("users").
              and_return([index])
@@ -73,7 +82,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
     end
 
     it "finds none when indexes are there but in a different order" do
-      @validation.stub!(:name => :email, :options => {:scope => [:city, :state]})
+      @validation.stub!(:attributes => [:email], :options => {:scope => [:city, :state]})
       index = fake_index_on(["state", "email", "city"], :unique => true)
       @model.stub_chain(:connection, :indexes).with("users").
              and_return([index])
