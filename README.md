@@ -21,8 +21,6 @@ database-level enforcement is lacking there as well.
 
 ## Limitations
 
-Currently only Rails 2.x is supported. Rails 3 support is coming soon.
-
 consistency\_fail depends on being able to find all your `ActiveRecord::Base`
 subclasses with some `$LOAD_PATH` trickery. If any models are in a path either
 not on your project's load path or in a path that doesn't include the word
@@ -42,6 +40,7 @@ or simply beam in happiness at your application's perfect record for
 
 ## Coming Soon
 
+* Handling validates\_uniqueness\_of calls scoped to an association (not a column)
 * Rails 3 support
 * Super-fail mode that monkey-patches explosions into your naughty models
 
