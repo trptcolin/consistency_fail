@@ -41,7 +41,6 @@ or simply beam in happiness at your application's perfect record for
 ## Coming Soon
 
 * Handling validates\_uniqueness\_of calls scoped to an association (not a column)
-* Rails 3 support
 * Super-fail mode that monkey-patches explosions into your naughty models
 
 ## License
