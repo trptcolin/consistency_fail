@@ -17,7 +17,13 @@ database-level enforcement is lacking there as well.
 
 ## Installation
 
+For Rails 3:
+
     gem install consistency_fail
+
+For Rails 2.3:
+
+    gem install consistency_fail -v=0.1.0
 
 ## Limitations
 
@@ -28,8 +34,8 @@ not on your project's load path or in a path that doesn't include the word
 
 ## Usage
 
-The only run mode for now is to generate a report of the problematic spots in
-your application. From your Rails project directory, run:
+The only run mode that's fully supported for now is to generate a report of the
+problematic spots in your application. From your Rails project directory, run:
 
     consistency_fail
 
