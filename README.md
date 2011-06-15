@@ -14,6 +14,8 @@ stop ignoring the C in ACID.
 Similar problems arise with `has_one`, so consistency\_fail finds places where
 database-level enforcement is lacking there as well.
 
+For more detail, see [my blog post on the
+subject](http://blog.8thlight.com/articles/2011/6/11/winning-at-consistency).
 
 ## Installation
 
