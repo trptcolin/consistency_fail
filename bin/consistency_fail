@@ -1,5 +1,16 @@
 #!/usr/bin/env ruby
 
+begin
+  require File.join(Dir.pwd, "config", "boot")
+rescue LoadError => e
+  puts "\nUh-oh! You must be in the root directory of a Rails project.\n"
+  raise
+end
+
+require 'active_record'
+require File.join(Dir.pwd, "config", "environment")
+
+$:<< File.join(File.dirname(__FILE__), "..", "lib")
 require "consistency_fail"
 
 def problems(models, introspector)

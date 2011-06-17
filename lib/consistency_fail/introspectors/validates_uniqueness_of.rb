@@ -1,3 +1,4 @@
+require 'validation_reflection'
 require 'consistency_fail/index'
 
 module ConsistencyFail
