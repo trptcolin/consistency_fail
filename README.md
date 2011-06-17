@@ -25,7 +25,7 @@ For Rails 3:
 
 For Rails 2.3:
 
-    gem install consistency_fail -v=0.1.0
+    gem install consistency_fail -v=0.1.1
 
 ## Limitations
 
