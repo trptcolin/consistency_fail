@@ -32,7 +32,8 @@ For Rails 2.3:
 consistency\_fail depends on being able to find all your `ActiveRecord::Base`
 subclasses with some `$LOAD_PATH` trickery. If any models are in a path either
 not on your project's load path or in a path that doesn't include the word
-"models", consistency\_fail won't be able to find or analyze them.
+"models", consistency\_fail won't be able to find or analyze them. I'm open to
+making the text "models" configurable if people want that.
 
 ## Usage
 
