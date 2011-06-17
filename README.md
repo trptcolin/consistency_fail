@@ -37,8 +37,8 @@ making the text "models" configurable if people want that.
 
 ## Usage
 
-The only run mode that's fully supported for now is to generate a report of the
-problematic spots in your application. From your Rails project directory, run:
+The normal run mode is to generate a report of the problematic spots in your
+application. From your Rails project directory, run:
 
     consistency_fail
 
@@ -47,9 +47,19 @@ you can view directly, redirect to a file as evidence to embarrass a teammate,
 or simply beam in happiness at your application's perfect record for
 `validates_uniqueness_of` and `has_one` usage.
 
-## Coming Soon
+The somewhat more sinister and awesome run mode is to include an initializer
+that does this:
 
-* Super-fail mode that monkey-patches explosions into your naughty models
+    require 'consistency_fail/enforcer'
+    ConsistencyFail::Enforcer.enforce!
+
+This will make it so that you can't save or load any ActiveRecord models until
+you go back and add your unique indexes. Of course, you'll need to make it so
+Rails can find `consistency_fail/enforcer` by having `consistency_fail` in your
+Gemfile, or by some other mechanism.
+
+This mega-fail mode is nice to have if you have a large team and want to ensure
+that new models or validations/associations follow the rules.
 
 ## License
 
