@@ -32,24 +32,12 @@ describe ConsistencyFail::Models do
   end
 
   it "gets all models" do
-    model_a = double("model_a",
-                     :ancestors => [ActiveRecord::Base],
-                     :class => Class,
-                     :name => "ModelA")
-    model_b = double("model_b",
-                     :ancestors => [ActiveRecord::Base],
-                     :class => Class,
-                     :name => "ModelB")
-    model_c = double("model_c",
-                     :ancestors => [ActiveRecord::Base],
-                     :class => ActiveRecord::Base,
-                     :name => "ModelC")
+    model_a = double(:name => "animal")
+    model_b = double(:name => "cat")
+    model_c = double(:name => "beach_ball")
 
-    ObjectSpace.stub(:each_object).
-                and_yield(model_c).
-                and_yield(model_b).
-                and_yield(model_a)
+    ActiveRecord::Base.stub(:send).with(:descendants).and_return([model_a, model_b, model_c])
 
-    models([]).all.should == [model_a, model_b]
+    models([]).all.should == [model_a, model_c, model_b]
   end
 end

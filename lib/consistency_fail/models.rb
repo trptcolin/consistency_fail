@@ -24,13 +24,7 @@ module ConsistencyFail
     end
 
     def all
-      models = []
-      ObjectSpace.each_object do |o|
-        models << o if o.class == Class &&
-                       o.ancestors.include?(ActiveRecord::Base) &&
-                       o != ActiveRecord::Base
-      end
-      models.sort_by(&:name)
+      ActiveRecord::Base.send(:descendants).sort_by(&:name)
     end
 
   end
