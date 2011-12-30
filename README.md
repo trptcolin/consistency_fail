@@ -61,6 +61,11 @@ Gemfile, or by some other mechanism.
 This mega-fail mode is nice to have if you have a large team and want to ensure
 that new models or validations/associations follow the rules.
 
+If you're using the `Enforcer`, depending on your project, you may need to 
+delay the initializer until later, so that model files can be loaded only once
+gem dependencies have been satisfied. One possible way is to move the code above 
+to the end of `environment.rb` or to the more specific `config/environment/*` files.
+
 ## License
 
 Released under the MIT License. See the LICENSE file for further details.
