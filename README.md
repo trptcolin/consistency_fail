@@ -27,6 +27,9 @@ For Rails 2.3:
 
     gem install consistency_fail -v=0.1.1
 
+Or, even better if you're using bundler, add it to your Gemfile, with the
+appropriate version number for your Rails version.
+
 ## Limitations
 
 consistency\_fail depends on being able to find all your `ActiveRecord::Base`
