@@ -42,7 +42,7 @@ describe ConsistencyFail::Introspectors::HasOne do
 
     it "finds one" do
       @association.stub!(:table_name => :addresses, :primary_key_name => "user_id")
-      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+      @model.stub_chain(:connection, :indexes).with("addresses").and_return([])
 
       indexes = subject.missing_indexes(@model)
       indexes.should == [ConsistencyFail::Index.new("addresses", ["user_id"])]
@@ -51,7 +51,12 @@ describe ConsistencyFail::Introspectors::HasOne do
     it "finds none when they're already in place" do
       @association.stub!(:table_name => :addresses, :primary_key_name => "user_id")
       index = ConsistencyFail::Index.new("addresses", ["user_id"])
-      ConsistencyFail::Introspectors::TableData.stub_chain(:new, :unique_indexes).
+
+      fake_connection = double("connection")
+      @model.stub_chain(:connection).and_return(fake_connection)
+
+      ConsistencyFail::Introspectors::TableData.stub_chain(:new, :unique_indexes_by_table).
+        with(fake_connection, "addresses").
         and_return([index])
 
       subject.missing_indexes(@model).should == []

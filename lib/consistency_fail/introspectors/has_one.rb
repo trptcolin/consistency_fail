@@ -18,9 +18,14 @@ module ConsistencyFail
       private :desired_indexes
 
       def missing_indexes(model)
-        existing_indexes = TableData.new.unique_indexes(model)
+        desired = desired_indexes(model)
 
-        desired_indexes(model).reject do |index|
+        existing_indexes = desired.inject([]) do |acc, d|
+          # TODO: This assumes the models share a database. Need to make that configurable somehow.
+          acc += TableData.new.unique_indexes_by_table(model.connection, d.table_name)
+        end
+
+        desired.reject do |index|
           existing_indexes.include?(index)
         end
       end

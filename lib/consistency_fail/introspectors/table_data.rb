@@ -6,9 +6,13 @@ module ConsistencyFail
       def unique_indexes(model)
         return [] if !model.table_exists?
 
-        ar_indexes = model.connection.indexes(model.table_name).select(&:unique)
+        unique_indexes_by_table(model.connection, model.table_name)
+      end
+
+      def unique_indexes_by_table(connection, table_name)
+        ar_indexes = connection.indexes(table_name).select(&:unique)
         ar_indexes.map do |index|
-          ConsistencyFail::Index.new(model.table_name, index.columns)
+          ConsistencyFail::Index.new(table_name, index.columns)
         end
       end
     end
