@@ -20,7 +20,7 @@ describe ConsistencyFail::Reporter do
     end
 
     it "shows a missing single-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new("users", ["email"])]
+      missing_indexes = [ConsistencyFail::Index.new(double('model'), "users", ["email"])]
 
       subject.report_validates_uniqueness_problems(fake_ar_model("User", :table_name => "users") => missing_indexes)
 
@@ -28,7 +28,7 @@ describe ConsistencyFail::Reporter do
     end
 
     it "shows a missing multiple-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new("addresses", ["number", "street", "zip"])]
+      missing_indexes = [ConsistencyFail::Index.new(double('model'),"addresses", ["number", "street", "zip"])]
 
       subject.report_validates_uniqueness_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
 
@@ -39,9 +39,9 @@ describe ConsistencyFail::Reporter do
       before(:each) do
         subject.report_validates_uniqueness_problems(
           fake_ar_model("User", :table_name => "users") =>
-            [ConsistencyFail::Index.new("users", ["email"])],
+            [ConsistencyFail::Index.new(double('model'),"users", ["email"])],
           fake_ar_model("Citizen", :table_name => "citizens") =>
-            [ConsistencyFail::Index.new("citizens", ["ssn"])]
+            [ConsistencyFail::Index.new(double('model'),"citizens", ["ssn"])]
         )
       end
 
@@ -64,7 +64,7 @@ describe ConsistencyFail::Reporter do
     end
 
     it "shows a missing single-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new("users", ["email"])]
+      missing_indexes = [ConsistencyFail::Index.new(double('model'),"users", ["email"])]
 
       subject.report_has_one_problems(fake_ar_model("Friend", :table_name => "users") => missing_indexes)
 

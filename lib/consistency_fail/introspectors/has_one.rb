@@ -12,7 +12,9 @@ module ConsistencyFail
       # TODO: handle has_one :through cases (multicolumn index on the join table?)
       def desired_indexes(model)
         instances(model).map do |a|
-          ConsistencyFail::Index.new(a.table_name.to_s, [a.primary_key_name]) rescue nil # TODO: why?
+          ConsistencyFail::Index.new(a.class_name.constantize,
+                                     a.table_name.to_s,
+                                     [a.foreign_key])
         end.compact
       end
       private :desired_indexes
@@ -21,8 +23,9 @@ module ConsistencyFail
         desired = desired_indexes(model)
 
         existing_indexes = desired.inject([]) do |acc, d|
-          # TODO: This assumes the models share a database. Need to make that configurable somehow.
-          acc += TableData.new.unique_indexes_by_table(model.connection, d.table_name)
+          acc += TableData.new.unique_indexes_by_table(d.model,
+                                                       d.model.connection,
+                                                       d.table_name)
         end
 
         desired.reject do |index|

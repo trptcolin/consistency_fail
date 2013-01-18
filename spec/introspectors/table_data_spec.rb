@@ -18,7 +18,7 @@ describe ConsistencyFail::Introspectors::TableData do
             and_return([fake_index_on(["a"], :unique => true)])
 
       indexes = subject.unique_indexes(model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["a"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["a"])]
     end
 
     it "doesn't get non-unique indexes" do
@@ -43,8 +43,8 @@ describe ConsistencyFail::Introspectors::TableData do
 
       indexes = subject.unique_indexes(model)
       indexes.size.should == 2
-      indexes.should == [ConsistencyFail::Index.new("users", ["a"]),
-                         ConsistencyFail::Index.new("users", ["b", "c"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["a"]),
+                         ConsistencyFail::Index.new(double('model'), "users", ["b", "c"])]
     end
   end
 

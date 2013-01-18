@@ -44,7 +44,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["email"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email"])]
     end
 
     it "finds one where the validation has scoped columns" do
@@ -52,7 +52,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["city", "email", "state"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["city", "email", "state"])]
     end
 
     it "leaves the columns in the given order" do
@@ -60,7 +60,7 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["email", "city", "state"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"])]
     end
 
     it "finds two where there are multiple attributes" do
@@ -68,8 +68,8 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       @model.stub_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("users", ["email", "city", "state"]),
-                         ConsistencyFail::Index.new("users", ["name", "city", "state"])]
+      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"]),
+                         ConsistencyFail::Index.new(double('model'), "users", ["name", "city", "state"])]
     end
 
     it "finds none when they're already in place" do

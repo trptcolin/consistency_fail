@@ -37,26 +37,30 @@ describe ConsistencyFail::Introspectors::HasOne do
       @association = double("association", :macro => :has_one)
       @model = fake_ar_model("User", :table_exists? => true,
                                      :table_name => "users",
+                                     :class_name => "User",
                                      :reflect_on_all_associations => [@association])
+      @address_class = double("Address Class")
+      @address_string = "Address"
+      @address_string.stub(:constantize).and_return(@address_class)
     end
 
     it "finds one" do
-      @association.stub!(:table_name => :addresses, :primary_key_name => "user_id")
-      @model.stub_chain(:connection, :indexes).with("addresses").and_return([])
+      @association.stub!(:table_name => :addresses, :class_name => @address_string, :foreign_key => "user_id")
+      @address_class.stub_chain(:connection, :indexes).with("addresses").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new("addresses", ["user_id"])]
+      indexes.should == [ConsistencyFail::Index.new(fake_ar_model("Address"), "addresses", ["user_id"])]
     end
 
     it "finds none when they're already in place" do
-      @association.stub!(:table_name => :addresses, :primary_key_name => "user_id")
-      index = ConsistencyFail::Index.new("addresses", ["user_id"])
+      @association.stub!(:table_name => :addresses, :class_name => @address_string, :foreign_key => "user_id")
+      index = ConsistencyFail::Index.new(double('model'), "addresses", ["user_id"])
 
       fake_connection = double("connection")
-      @model.stub_chain(:connection).and_return(fake_connection)
+      @address_class.stub_chain(:connection).and_return(fake_connection)
 
       ConsistencyFail::Introspectors::TableData.stub_chain(:new, :unique_indexes_by_table).
-        with(fake_connection, "addresses").
+        with(@address_class, fake_connection, "addresses").
         and_return([index])
 
       subject.missing_indexes(@model).should == []

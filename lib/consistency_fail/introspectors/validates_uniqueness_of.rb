@@ -13,7 +13,9 @@ module ConsistencyFail
         instances(model).map do |v|
           v.attributes.map do |attribute|
             scoped_columns = v.options[:scope] || []
-            ConsistencyFail::Index.new(model.table_name, [attribute, *scoped_columns])
+            ConsistencyFail::Index.new(model,
+                                       model.table_name,
+                                       [attribute, *scoped_columns])
           end
         end.flatten
       end
