@@ -26,11 +26,20 @@ models.preload_all
 
 reporter = ConsistencyFail::Reporter.new
 
+success = true
+
 introspector = ConsistencyFail::Introspectors::ValidatesUniquenessOf.new
 problems = problems(models.all, introspector)
 reporter.report_validates_uniqueness_problems(problems)
+success &&= problems.empty?
 
 introspector = ConsistencyFail::Introspectors::HasOne.new
 problems = problems(models.all, introspector)
 reporter.report_has_one_problems(problems)
+success &&= problems.empty?
 
+if success
+  exit 0
+else
+  exit 1
+end
