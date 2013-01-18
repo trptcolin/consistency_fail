@@ -19,16 +19,14 @@ subject](http://blog.8thlight.com/articles/2011/6/11/winning-at-consistency).
 
 ## Installation
 
-For Rails 3:
+I'm currently only maintaining consistency\_fail for Rails 3. If you need or
+want Rails 2.3 support, I'd be happy to take patches based off the 0.1.1
+branch.
 
     gem install consistency_fail
 
-For Rails 2.3:
-
-    gem install consistency_fail -v=0.1.1
-
 Or, even better if you're using bundler, add it to your Gemfile, with the
-appropriate version number for your Rails version.
+appropriate version number to match your Rails version.
 
 ## Limitations
 
@@ -36,7 +34,8 @@ consistency\_fail depends on being able to find all your `ActiveRecord::Base`
 subclasses with some `$LOAD_PATH` trickery. If any models are in a path either
 not on your project's load path or in a path that doesn't include the word
 "models", consistency\_fail won't be able to find or analyze them. I'm open to
-making the text "models" configurable if people want that.
+making the text "models" configurable if people want that. Please open an issue
+or pull request if so!
 
 ## Usage
 
@@ -64,9 +63,9 @@ Gemfile, or by some other mechanism.
 This mega-fail mode is nice to have if you have a large team and want to ensure
 that new models or validations/associations follow the rules.
 
-If you're using the `Enforcer`, depending on your project, you may need to 
+If you're using the `Enforcer`, depending on your project, you may need to
 delay the initializer until later, so that model files can be loaded only once
-gem dependencies have been satisfied. One possible way is to move the code above 
+gem dependencies have been satisfied. One possible way is to move the code above
 to the end of `environment.rb` or to the more specific `config/environment/*` files.
 
 ## License
