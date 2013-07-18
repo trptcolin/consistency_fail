@@ -14,7 +14,7 @@ $:<< File.join(File.dirname(__FILE__), "..", "lib")
 require "consistency_fail"
 
 def problems(models, introspector)
-  problems = models.map do |m|
+  models.map do |m|
     [m, introspector.missing_indexes(m)]
   end.reject do |m, indexes|
     indexes.empty?
@@ -36,6 +36,11 @@ success &&= problems.empty?
 introspector = ConsistencyFail::Introspectors::HasOne.new
 problems = problems(models.all, introspector)
 reporter.report_has_one_problems(problems)
+success &&= problems.empty?
+
+introspector = ConsistencyFail::Introspectors::Polymorphic.new
+problems = problems(models.all, introspector)
+reporter.report_polymorphic_problems(problems)
 success &&= problems.empty?
 
 if success

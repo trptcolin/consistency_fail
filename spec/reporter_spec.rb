@@ -71,4 +71,20 @@ describe ConsistencyFail::Reporter do
       @fake_out.string.should =~ /Friend\s+users\s+\(email\)/m
     end
   end
+
+  context "polymorphic" do
+    it "says everything's good" do
+      subject.report_polymorphic_problems([])
+
+      @fake_out.string.should =~ /Hooray!/
+    end
+
+    it "shows a missing compound index on a single model" do
+      missing_indexes = [ConsistencyFail::Index.new(double('model'), "addresses", ["addressable_type", "addressable_id"])]
+
+      subject.report_polymorphic_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
+
+      @fake_out.string.should =~ /Address\s+addresses\s+\(addressable_type, addressable_id\)/m
+    end
+  end
 end
