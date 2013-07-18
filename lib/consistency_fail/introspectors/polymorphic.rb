@@ -2,19 +2,24 @@ require 'consistency_fail/index'
 
 module ConsistencyFail
   module Introspectors
-    class HasOne
+    class Polymorphic
       def instances(model)
         model.reflect_on_all_associations.select do |a|
-          a.macro == :has_one && a.options[:as].to_s.length == 0
+          a.macro == :has_one && a.options[:as].to_s.length > 0
         end
       end
 
-      # TODO: handle has_one :through cases (multicolumn index on the join table?)
       def desired_indexes(model)
         instances(model).map do |a|
-          ConsistencyFail::Index.new(a.class_name.constantize,
-                                     a.table_name.to_s,
-                                     [a.foreign_key])
+          as      = a.options[:as]
+          as_type = "#{as}_type"
+          as_id   = "#{as}_id"
+
+          ConsistencyFail::Index.new(
+            a.class_name.constantize,
+            a.table_name.to_s,
+            [as_type, as_id]
+          )
         end.compact
       end
       private :desired_indexes
@@ -32,6 +37,7 @@ module ConsistencyFail
           existing_indexes.include?(index)
         end
       end
+
     end
   end
 end
