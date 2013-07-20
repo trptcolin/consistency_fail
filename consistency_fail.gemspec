@@ -19,6 +19,7 @@ constraint. You'll need a database-level constraint for cases like these.
 consistency_fail will find your missing unique indexes, so you can add them and
 stop ignoring the C in ACID.
 EOF
+  s.license = "MIT"
 
   s.add_development_dependency "activerecord", "~>3.0"
   s.add_development_dependency "rspec"
