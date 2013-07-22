@@ -18,7 +18,7 @@ describe ConsistencyFail::Models do
   it "accepts and matches path names as well as strings" do
     models = models([Pathname.new("app/models")])
     lambda { models.dirs }.should_not raise_error(TypeError)
-    models.dirs.should == ["app/models"]
+    models.dirs.should == [Pathname.new("app/models")]
   end
 
   it "preloads models by calling require_dependency" do
