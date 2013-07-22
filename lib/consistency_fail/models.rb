@@ -12,7 +12,7 @@ module ConsistencyFail
     end
 
     def dirs
-      load_path.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp }
+      load_path.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp.to_s }
     end
 
     def preload_all
