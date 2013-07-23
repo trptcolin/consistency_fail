@@ -42,11 +42,11 @@ module ConsistencyFail
           alias :count :find
         end
 
-        def save
+        def save(*arguments)
           self.class.panic
         end
 
-        def save!
+        def save!(*arguments)
           self.class.panic
         end
       end
