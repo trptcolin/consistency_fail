@@ -60,6 +60,14 @@ describe ConsistencyFail::Introspectors::HasOne do
       indexes.should == [ConsistencyFail::Index.new(fake_ar_model("Address"), "addresses", ["user_id"])]
     end
 
+    it "finds one in Rails 3.0.x (where foreign_key is not defined)" do
+      @association.stub!(:table_name => :addresses, :class_name => @address_string, :primary_key_name => "user_id")
+      @address_class.stub_chain(:connection, :indexes).with("addresses").and_return([])
+
+      indexes = subject.missing_indexes(@model)
+      indexes.should == [ConsistencyFail::Index.new(fake_ar_model("Address"), "addresses", ["user_id"])]
+    end
+
     it "finds none when they're already in place" do
       @association.stub!(:table_name => :addresses, :class_name => @address_string, :foreign_key => "user_id")
       index = ConsistencyFail::Index.new(double('model'), "addresses", ["user_id"])

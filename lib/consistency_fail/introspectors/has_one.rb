@@ -12,9 +12,14 @@ module ConsistencyFail
       # TODO: handle has_one :through cases (multicolumn index on the join table?)
       def desired_indexes(model)
         instances(model).map do |a|
+          if a.respond_to?(:foreign_key)
+            foreign_key = a.foreign_key
+          else
+            foreign_key = a.primary_key_name
+          end
           ConsistencyFail::Index.new(a.class_name.constantize,
                                      a.table_name.to_s,
-                                     [a.foreign_key])
+                                     [foreign_key])
         end.compact
       end
       private :desired_indexes
