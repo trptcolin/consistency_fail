@@ -15,7 +15,8 @@ module ConsistencyFail
       models.preload_all
 
       introspectors = [ConsistencyFail::Introspectors::ValidatesUniquenessOf.new,
-                       ConsistencyFail::Introspectors::HasOne.new]
+                       ConsistencyFail::Introspectors::HasOne.new,
+                       ConsistencyFail::Introspectors::Polymorphic.new]
 
       problem_models_exist = models.all.detect do |model|
         introspectors.any? {|i| !i.missing_indexes(model).empty?}
