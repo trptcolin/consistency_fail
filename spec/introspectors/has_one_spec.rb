@@ -38,6 +38,14 @@ describe ConsistencyFail::Introspectors::HasOne do
 
       subject.instances(model).should == []
     end
+
+    it "finds one, but it's a :through association" do
+      model = fake_ar_model("User")
+      association = double("association", :macro => :has_one, :options => {:through => :amodel})
+      model.stub!(:reflect_on_all_associations).and_return([association])
+
+      subject.instances(model).should == []
+    end
   end
 
   describe "finding missing indexes" do
