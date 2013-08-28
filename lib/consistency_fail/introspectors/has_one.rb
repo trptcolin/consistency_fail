@@ -5,7 +5,7 @@ module ConsistencyFail
     class HasOne
       def instances(model)
         model.reflect_on_all_associations.select do |a|
-          a.macro == :has_one && a.options[:as].to_s.length == 0
+          a.macro == :has_one && a.options[:as].to_s.length == 0 && a.options[:through].to_s.length == 0
         end
       end
 
