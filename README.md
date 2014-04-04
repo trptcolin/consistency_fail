@@ -68,6 +68,10 @@ delay the initializer until later, so that model files can be loaded only once
 gem dependencies have been satisfied. One possible way is to move the code above
 to the end of `environment.rb` or to the more specific `config/environment/*` files.
 
+## Using with Guard
+
+There is a guard integration plugin available. See [guard-consistency_fail](https://github.com/ptyagi16/guard-consistency_fail).
+
 ## License
 
 Released under the MIT License. See the LICENSE file for further details.
