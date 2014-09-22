@@ -57,11 +57,10 @@ describe ConsistencyFail::Introspectors::HasOne do
                                      :reflect_on_all_associations => [@association])
       @address_class = double("Address Class")
       @address_string = "Address"
-      allow(@address_string).to receive(:constantize).and_return(@address_class)
     end
 
     it "finds one" do
-      allow(@association).to receive_messages(:table_name => :addresses, :class_name => @address_string, :foreign_key => "user_id")
+      allow(@association).to receive_messages(:table_name => :addresses, :klass => @address_class, :foreign_key => "user_id")
       allow(@address_class).to receive_message_chain(:connection, :indexes).with("addresses").and_return([])
 
       indexes = subject.missing_indexes(@model)
@@ -69,7 +68,7 @@ describe ConsistencyFail::Introspectors::HasOne do
     end
 
     it "finds one in Rails 3.0.x (where foreign_key is not defined)" do
-      allow(@association).to receive_messages(:table_name => :addresses, :class_name => @address_string, :primary_key_name => "user_id")
+      allow(@association).to receive_messages(:table_name => :addresses, :klass => @address_class, :primary_key_name => "user_id")
       allow(@address_class).to receive_message_chain(:connection, :indexes).with("addresses").and_return([])
 
       indexes = subject.missing_indexes(@model)
@@ -77,7 +76,7 @@ describe ConsistencyFail::Introspectors::HasOne do
     end
 
     it "finds none when they're already in place" do
-      allow(@association).to receive_messages(:table_name => :addresses, :class_name => @address_string, :foreign_key => "user_id")
+      allow(@association).to receive_messages(:table_name => :addresses, :klass => @address_class, :foreign_key => "user_id")
       index = ConsistencyFail::Index.new(double('model'), "addresses", ["user_id"])
 
       fake_connection = double("connection")
@@ -89,8 +88,5 @@ describe ConsistencyFail::Introspectors::HasOne do
 
       expect(subject.missing_indexes(@model)).to eq([])
     end
-
   end
 end
-
-

@@ -49,11 +49,10 @@ describe ConsistencyFail::Introspectors::Polymorphic do
                                      :reflect_on_all_associations => [@association])
       @address_class = double("Address Class")
       @address_string = "Address"
-      allow(@address_string).to receive(:constantize).and_return(@address_class)
     end
 
     it "finds one" do
-      allow(@association).to receive_messages(:table_name => :addresses, :class_name => @address_string)
+      allow(@association).to receive_messages(:table_name => :addresses, :klass => @address_class)
       allow(@address_class).to receive_message_chain(:connection, :indexes).with("addresses").and_return([])
 
       indexes = subject.missing_indexes(@model)
@@ -61,7 +60,7 @@ describe ConsistencyFail::Introspectors::Polymorphic do
     end
 
     it "finds none when they're already in place" do
-      allow(@association).to receive_messages(:table_name => :addresses, :class_name => @address_string)
+      allow(@association).to receive_messages(:table_name => :addresses, :klass => @address_class)
       index = ConsistencyFail::Index.new(double('model'), "addresses", ["addressable_type", "addressable_id"])
 
       fake_connection = double("connection")
