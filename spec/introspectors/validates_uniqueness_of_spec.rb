@@ -9,25 +9,25 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
   describe "instances of validates_uniqueness_of" do
     it "finds none" do
       model = fake_ar_model("User")
-      model.stub!(:validators).and_return([])
+      allow(model).to receive(:validators).and_return([])
 
-      subject.instances(model).should == []
+      expect(subject.instances(model)).to eq([])
     end
 
     it "finds one" do
       model = fake_ar_model("User")
       validation = double("validation", :class => ActiveRecord::Validations::UniquenessValidator)
-      model.stub!(:validators).and_return([validation])
+      allow(model).to receive(:validators).and_return([validation])
 
-      subject.instances(model).should == [validation]
+      expect(subject.instances(model)).to eq([validation])
     end
 
     it "finds other validations, but not uniqueness" do
       model = fake_ar_model("User")
       validation = double("validation", :class => ActiveModel::Validations::FormatValidator)
-      model.stub!(:validators).and_return([validation])
+      allow(model).to receive(:validators).and_return([validation])
 
-      subject.instances(model).should == []
+      expect(subject.instances(model)).to eq([])
     end
   end
 
@@ -40,54 +40,54 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
     end
 
     it "finds one" do
-      @validation.stub!(:attributes => [:email], :options => {})
-      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+      allow(@validation).to receive_messages(:attributes => [:email], :options => {})
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email"])]
+      expect(indexes).to eq([ConsistencyFail::Index.new(double('model'), "users", ["email"])])
     end
 
     it "finds one where the validation has scoped columns" do
-      @validation.stub!(:attributes => [:city], :options => {:scope => [:email, :state]})
-      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+      allow(@validation).to receive_messages(:attributes => [:city], :options => {:scope => [:email, :state]})
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["city", "email", "state"])]
+      expect(indexes).to eq([ConsistencyFail::Index.new(double('model'), "users", ["city", "email", "state"])])
     end
 
     it "leaves the columns in the given order" do
-      @validation.stub!(:attributes => [:email], :options => {:scope => [:city, :state]})
-      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+      allow(@validation).to receive_messages(:attributes => [:email], :options => {:scope => [:city, :state]})
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"])]
+      expect(indexes).to eq([ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"])])
     end
 
     it "finds two where there are multiple attributes" do
-      @validation.stub!(:attributes => [:email, :name], :options => {:scope => [:city, :state]})
-      @model.stub_chain(:connection, :indexes).with("users").and_return([])
+      allow(@validation).to receive_messages(:attributes => [:email, :name], :options => {:scope => [:city, :state]})
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").and_return([])
 
       indexes = subject.missing_indexes(@model)
-      indexes.should == [ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"]),
-                         ConsistencyFail::Index.new(double('model'), "users", ["name", "city", "state"])]
+      expect(indexes).to eq([ConsistencyFail::Index.new(double('model'), "users", ["email", "city", "state"]),
+                         ConsistencyFail::Index.new(double('model'), "users", ["name", "city", "state"])])
     end
 
     it "finds none when they're already in place" do
-      @validation.stub!(:attributes => [:email], :options => {})
+      allow(@validation).to receive_messages(:attributes => [:email], :options => {})
       index = fake_index_on(["email"], :unique => true)
-      @model.stub_chain(:connection, :indexes).with("users").
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").
              and_return([index])
 
-      subject.missing_indexes(@model).should == []
+      expect(subject.missing_indexes(@model)).to eq([])
     end
 
     it "finds none when indexes are there but in a different order" do
-      @validation.stub!(:attributes => [:email], :options => {:scope => [:city, :state]})
+      allow(@validation).to receive_messages(:attributes => [:email], :options => {:scope => [:city, :state]})
       index = fake_index_on(["state", "email", "city"], :unique => true)
-      @model.stub_chain(:connection, :indexes).with("users").
+      allow(@model).to receive_message_chain(:connection, :indexes).with("users").
              and_return([index])
 
-      subject.missing_indexes(@model).should == []
+      expect(subject.missing_indexes(@model)).to eq([])
     end
   end
 end

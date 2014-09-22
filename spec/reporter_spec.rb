@@ -16,7 +16,7 @@ describe ConsistencyFail::Reporter do
     it "says everything's good" do
       subject.report_validates_uniqueness_problems([])
 
-      @fake_out.string.should =~ /Hooray!/
+      expect(@fake_out.string).to match(/Hooray!/)
     end
 
     it "shows a missing single-column index on a single model" do
@@ -24,7 +24,7 @@ describe ConsistencyFail::Reporter do
 
       subject.report_validates_uniqueness_problems(fake_ar_model("User", :table_name => "users") => missing_indexes)
 
-      @fake_out.string.should =~ /users\s+\(email\)/
+      expect(@fake_out.string).to match(/users\s+\(email\)/)
     end
 
     it "shows a missing multiple-column index on a single model" do
@@ -32,7 +32,7 @@ describe ConsistencyFail::Reporter do
 
       subject.report_validates_uniqueness_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
 
-      @fake_out.string.should =~ /addresses\s+\(number, street, zip\)/
+      expect(@fake_out.string).to match(/addresses\s+\(number, street, zip\)/)
     end
 
     context "with problems on multiple models" do
@@ -46,12 +46,12 @@ describe ConsistencyFail::Reporter do
       end
 
       it "shows all problems" do
-        @fake_out.string.should =~ /users\s+\(email\)/m
-        @fake_out.string.should =~ /citizens\s+\(ssn\)/m
+        expect(@fake_out.string).to match(/users\s+\(email\)/m)
+        expect(@fake_out.string).to match(/citizens\s+\(ssn\)/m)
       end
 
       it "orders the models alphabetically" do
-        @fake_out.string.should =~ /citizens\s+\(ssn\).*users\s+\(email\)/m
+        expect(@fake_out.string).to match(/citizens\s+\(ssn\).*users\s+\(email\)/m)
       end
     end
   end
@@ -60,7 +60,7 @@ describe ConsistencyFail::Reporter do
     it "says everything's good" do
       subject.report_has_one_problems([])
 
-      @fake_out.string.should =~ /Hooray!/
+      expect(@fake_out.string).to match(/Hooray!/)
     end
 
     it "shows a missing single-column index on a single model" do
@@ -68,7 +68,7 @@ describe ConsistencyFail::Reporter do
 
       subject.report_has_one_problems(fake_ar_model("Friend", :table_name => "users") => missing_indexes)
 
-      @fake_out.string.should =~ /Friend\s+users\s+\(email\)/m
+      expect(@fake_out.string).to match(/Friend\s+users\s+\(email\)/m)
     end
   end
 
@@ -76,7 +76,7 @@ describe ConsistencyFail::Reporter do
     it "says everything's good" do
       subject.report_polymorphic_problems([])
 
-      @fake_out.string.should =~ /Hooray!/
+      expect(@fake_out.string).to match(/Hooray!/)
     end
 
     it "shows a missing compound index on a single model" do
@@ -84,7 +84,7 @@ describe ConsistencyFail::Reporter do
 
       subject.report_polymorphic_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
 
-      @fake_out.string.should =~ /Address\s+addresses\s+\(addressable_type, addressable_id\)/m
+      expect(@fake_out.string).to match(/Address\s+addresses\s+\(addressable_type, addressable_id\)/m)
     end
   end
 end
