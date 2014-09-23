@@ -22,7 +22,7 @@ EOF
   s.license = "MIT"
 
   s.add_development_dependency "activerecord", "~>3.0"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "~>3.1"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
