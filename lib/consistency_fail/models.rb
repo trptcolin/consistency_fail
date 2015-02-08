@@ -26,6 +26,5 @@ module ConsistencyFail
     def all
       ActiveRecord::Base.send(:descendants).sort_by(&:name)
     end
-
   end
 end

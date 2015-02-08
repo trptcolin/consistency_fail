@@ -17,7 +17,7 @@ module ConsistencyFail
           else
             foreign_key = a.primary_key_name
           end
-          ConsistencyFail::Index.new(a.class_name.constantize,
+          ConsistencyFail::Index.new(a.klass,
                                      a.table_name.to_s,
                                      [foreign_key])
         end.compact
