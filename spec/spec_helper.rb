@@ -1,13 +1,14 @@
-$:<< File.expand_path('..', __FILE__)
-$:<< File.expand_path('../../lib', __FILE__)
+require 'bundler/setup'
 
-require 'rubygems'
+Bundler.require(:default, :test)
 
-def fake_ar_model(name, options = {})
-  double("AR model: #{name}", options.merge(:name => name))
+Dir['./spec/support/**/*.rb'].each { |file| require file }
+
+RSpec.configure do |config|
+  config.around do |example|
+    ActiveRecord::Base.transaction do
+      example.run
+      raise ActiveRecord::Rollback
+    end
+  end
 end
-
-def fake_index_on(columns, options = {})
-  double("index on #{columns.inspect}", options.merge(:columns => columns))
-end
-
