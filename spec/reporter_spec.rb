@@ -1,90 +1,129 @@
-require 'spec_helper'
-require 'consistency_fail/reporter'
-require 'consistency_fail/index'
-
 describe ConsistencyFail::Reporter do
-  before(:each) do
-    @real_out = $stdout
-    @fake_out = StringIO.new
-    $stdout = @fake_out
-  end
-  after(:each) do
-    $stdout = @real_out
-  end
-
+  
   context "validates_uniqueness_of" do
     it "says everything's good" do
-      subject.report_validates_uniqueness_problems([])
-
-      expect(@fake_out.string).to match(/Hooray!/)
+      expect { 
+        subject.report_validates_uniqueness_problems([]) 
+      }.to output(/Hooray!/).to_stdout
     end
 
     it "shows a missing single-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new(double('model'), "users", ["email"])]
+      missing_indexes = [
+        ConsistencyFail::Index.new(
+          WrongAccount, 
+          WrongAccount.table_name, 
+          ["email"]
+        )
+      ]
 
-      subject.report_validates_uniqueness_problems(fake_ar_model("User", :table_name => "users") => missing_indexes)
-
-      expect(@fake_out.string).to match(/users\s+\(email\)/)
+      expect { 
+        subject.report_validates_uniqueness_problems(
+          WrongAccount => missing_indexes
+        )
+      }.to output(/wrong_accounts\s+\(email\)/).to_stdout
     end
 
     it "shows a missing multiple-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new(double('model'),"addresses", ["number", "street", "zip"])]
+      missing_indexes = [
+        ConsistencyFail::Index.new(
+          WrongBusiness, 
+          WrongBusiness.table_name, 
+          ["name", "city", "state"]
+        )
+      ]
 
-      subject.report_validates_uniqueness_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
-
-      expect(@fake_out.string).to match(/addresses\s+\(number, street, zip\)/)
+      expect {
+        subject.report_validates_uniqueness_problems(
+          WrongBusiness => missing_indexes
+        )
+      }.to output(/wrong_businesses\s+\(name, city, state\)/).to_stdout
     end
 
     context "with problems on multiple models" do
-      before(:each) do
-        subject.report_validates_uniqueness_problems(
-          fake_ar_model("User", :table_name => "users") =>
-            [ConsistencyFail::Index.new(double('model'),"users", ["email"])],
-          fake_ar_model("Citizen", :table_name => "citizens") =>
-            [ConsistencyFail::Index.new(double('model'),"citizens", ["ssn"])]
-        )
+      def report
+        missing_indices = {
+          WrongAccount => [
+            ConsistencyFail::Index.new(
+              WrongAccount, 
+              WrongAccount.table_name, 
+              ["email"]
+            )
+          ],
+          WrongBusiness => [
+            ConsistencyFail::Index.new(
+              WrongBusiness, 
+              WrongBusiness.table_name, 
+              ["name", "city", "state"]
+            )
+          ]
+        }
+        
+        subject.report_validates_uniqueness_problems(missing_indices)
       end
 
       it "shows all problems" do
-        expect(@fake_out.string).to match(/users\s+\(email\)/m)
-        expect(@fake_out.string).to match(/citizens\s+\(ssn\)/m)
+        expect { report }.to output(/wrong_accounts\s+\(email\)/).to_stdout
+        expect { report }.to output(
+          /wrong_businesses\s+\(name, city, state\)/
+        ).to_stdout
       end
 
       it "orders the models alphabetically" do
-        expect(@fake_out.string).to match(/citizens\s+\(ssn\).*users\s+\(email\)/m)
+        expect { report }.to output(/
+          wrong_accounts\s+\(email\)
+          (\s|\S)*
+          wrong_businesses\s+\(name,\scity,\sstate\)
+        /x).to_stdout
       end
     end
   end
 
   context "has_one" do
     it "says everything's good" do
-      subject.report_has_one_problems([])
-
-      expect(@fake_out.string).to match(/Hooray!/)
+      expect { 
+        subject.report_has_one_problems([]) 
+      }.to output(/Hooray!/).to_stdout
     end
 
     it "shows a missing single-column index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new(double('model'),"users", ["email"])]
+      missing_indexes = [
+        ConsistencyFail::Index.new(
+          WrongAddress, 
+          WrongAddress.table_name, 
+          ["wrong_user_id"]
+        )
+      ]
 
-      subject.report_has_one_problems(fake_ar_model("Friend", :table_name => "users") => missing_indexes)
-
-      expect(@fake_out.string).to match(/Friend\s+users\s+\(email\)/m)
+      expect {
+        subject.report_has_one_problems(WrongAddress => missing_indexes)
+      }.to output(/wrong_addresses\s+\(wrong_user_id\)/).to_stdout
     end
   end
 
   context "polymorphic" do
     it "says everything's good" do
-      subject.report_polymorphic_problems([])
-
-      expect(@fake_out.string).to match(/Hooray!/)
+      expect {
+        subject.report_polymorphic_problems([])
+      }.to output(/Hooray!/).to_stdout
     end
 
     it "shows a missing compound index on a single model" do
-      missing_indexes = [ConsistencyFail::Index.new(double('model'), "addresses", ["addressable_type", "addressable_id"])]
+      missing_indexes = [
+        ConsistencyFail::Index.new(
+          WrongAttachment, 
+          WrongAttachment.table_name, 
+          ["attachable_type", "attachable_id"]
+        )
+      ]
 
-      subject.report_polymorphic_problems(fake_ar_model("Address", :table_name => "addresses") => missing_indexes)
-
-      expect(@fake_out.string).to match(/Address\s+addresses\s+\(addressable_type, addressable_id\)/m)
+      expect {
+        subject.report_polymorphic_problems(WrongAttachment => missing_indexes)
+      }.to(
+        output(
+          /wrong_attachments\s+\(attachable_type, attachable_id\)/
+        ).to_stdout
+      )
     end
   end
+  
 end

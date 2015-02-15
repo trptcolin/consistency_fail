@@ -1,7 +1,5 @@
-require 'spec_helper'
-require 'consistency_fail/models'
-
 describe ConsistencyFail::Models do
+  
   def models(load_path)
     ConsistencyFail::Models.new(load_path)
   end
@@ -46,4 +44,5 @@ describe ConsistencyFail::Models do
 
     expect(models([]).all).to eq([model_a, model_c, model_b])
   end
+  
 end

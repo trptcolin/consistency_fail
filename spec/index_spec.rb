@@ -1,40 +1,59 @@
-require 'spec_helper'
-require 'consistency_fail/index'
-
 describe ConsistencyFail::Index do
-
+  
+  let(:index) do
+    ConsistencyFail::Index.new(
+      CorrectAddress, 
+      CorrectAddress.table_name, 
+      ["city", "state"]
+    )
+  end
+  
   describe "value objectiness" do
     it "holds onto model, table name, and columns" do
-      model = double("model")
-      index = ConsistencyFail::Index.new(model, "addresses", ["city", "state"])
-      expect(index.model).to eq(model)
-      expect(index.table_name).to eq("addresses")
-      expect(index.columns).to eq(["city", "state"])
+      expect(index.model).to eq(CorrectAddress)
+      expect(index.table_name).to eq("correct_addresses")
+      expect(index.columns).to eq(
+        ["city", "state"]
+      )
     end
 
     it "leaves columns in the initial order (since we only care about presence, not performance)" do
-      index = ConsistencyFail::Index.new(double('model'), "addresses", ["state", "city"])
-      expect(index.columns).to eq(["state", "city"])
+      expect(index.columns).to eq(
+        ["city", "state"]
+      )
     end
   end
 
-  describe "equality test" do
+  describe "equality test" do  
     it "passes when everything matches" do
-      expect(ConsistencyFail::Index.new(double('model'), "addresses", ["city", "state"])).to eq(
-        ConsistencyFail::Index.new(double('model'),"addresses", ["city", "state"])
+      expect(index).to eq(
+        ConsistencyFail::Index.new(
+          "CorrectAddress".constantize, 
+          "correct_addresses", 
+          ["city", "state"]
+        )
       )
     end
 
     it "fails when tables are different" do
-      expect(ConsistencyFail::Index.new(double('model'),"locations", ["city", "state"])).not_to eq(
-        ConsistencyFail::Index.new(double('model'),"addresses", ["city", "state"])
+      expect(index).not_to eq(
+        ConsistencyFail::Index.new(
+          CorrectAttachment, 
+          CorrectAttachment.table_name, 
+          ["attachable_id", "attachable_type"]
+        )
       )
     end
 
     it "fails when columns are different" do
-      expect(ConsistencyFail::Index.new(double('model'),"addresses", ["city", "state"])).not_to eq(
-        ConsistencyFail::Index.new(double('model'),"addresses", ["state", "zip"])
+      expect(index).not_to eq(
+        ConsistencyFail::Index.new(
+          CorrectAddress, 
+          CorrectAddress.table_name, 
+          ["correct_user_id"]
+        )
       )
     end
   end
+  
 end
