@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 0) do
   end
 
   add_index "correct_addresses", ["correct_user_id"], name: "index_correct_addresses_on_user_id", unique: true, using: :btree
+  add_index "correct_addresses", ["city", "correct_user_id"], name: "index_correct_addresses_on_city_and_correct_user", unique: true, using: :btree
 
   create_table :correct_attachments do |t|
     t.integer :attachable_id

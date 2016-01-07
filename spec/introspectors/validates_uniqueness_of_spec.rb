@@ -48,6 +48,10 @@ describe ConsistencyFail::Introspectors::ValidatesUniquenessOf do
       expect(subject.missing_indexes(CorrectAccount)).to be_empty
     end
 
+    it "finds none even if scoped by association" do
+      expect(subject.missing_indexes(CorrectAddress)).to be_empty
+    end
+
     it "finds none when indexes are there but in a different order" do
       expect(subject.missing_indexes(CorrectPerson)).to be_empty
     end
