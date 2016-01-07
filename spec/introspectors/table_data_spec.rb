@@ -42,6 +42,11 @@ describe ConsistencyFail::Introspectors::TableData do
           CorrectAttachment,
           CorrectAttachment.table_name,
           ["attachable_id", "attachable_type"]
+        ),
+        ConsistencyFail::Index.new(
+          CorrectAttachment,
+          CorrectAttachment.table_name,
+          ["name", "attachable_id", "attachable_type"]
         )
       ]
 

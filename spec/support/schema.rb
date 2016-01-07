@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.timestamps
   end
 
+  add_index "correct_attachments", ["name", "attachable_id", "attachable_type"], name: "index_correct_attachments_on_name_attachable_id_and_type", unique: true, using: :btree
   add_index "correct_attachments", ["attachable_id", "attachable_type"], name: "index_correct_attachments_on_attachable_id_and_attachable_type", unique: true, using: :btree
   add_index "correct_attachments", ["name"], name: "index_correct_attachments_on_name", unique: true, using: :btree
 
