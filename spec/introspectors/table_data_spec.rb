@@ -7,16 +7,16 @@ describe ConsistencyFail::Introspectors::TableData do
 
     it "gets one" do
       index = ConsistencyFail::Index.new(
-        CorrectAddress,
-        CorrectAddress.table_name,
-        ["correct_user_id"]
+        CorrectAccount,
+        CorrectAccount.table_name,
+        ["email"]
       )
 
       expect(
         ConsistencyFail::Introspectors::TableData.new.unique_indexes_by_table(
-          CorrectAddress,
+          CorrectAccount,
           ActiveRecord::Base.connection,
-          CorrectAddress.table_name
+          CorrectAccount.table_name
         )
       ).to eq [index]
     end
