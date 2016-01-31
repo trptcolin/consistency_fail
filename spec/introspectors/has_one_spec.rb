@@ -14,7 +14,7 @@ describe ConsistencyFail::Introspectors::HasOne do
     end
     
     it "finds none when they're already in place" do
-      expect(subject.missing_indexes(CorrectUser)).to eq([])
+      expect(subject.missing_indexes(CorrectUser)).to be_empty
     end
   end
   
