@@ -16,7 +16,7 @@ module ConsistencyFail
           as_id   = "#{as}_id"
 
           ConsistencyFail::Index.new(
-            a.class_name.constantize,
+            a.klass,
             a.table_name.to_s,
             [as_type, as_id]
           )
@@ -37,7 +37,6 @@ module ConsistencyFail
           existing_indexes.include?(index)
         end
       end
-
     end
   end
 end

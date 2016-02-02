@@ -51,6 +51,22 @@ ActiveRecord::Schema.define(version: 0) do
     t.timestamps
   end
 
+  create_table :correct_user_credentials do |t|
+    t.string :oauth_token
+    t.string :refresh_token
+    t.integer :correct_user_id
+    t.timestamps
+  end
+  add_index "correct_user_credentials", ["correct_user_id"], name: "index_correct_user_credentials_on_user_id", unique: true, using: :btree
+
+  create_table :correct_user_phones do |t|
+    t.string :text
+    t.integer :phoneable_id
+    t.string :phoneable_type
+    t.timestamps
+  end
+  add_index "correct_user_phones", ["phoneable_id", "phoneable_type"], name: "index_correct_user_phones_on_id_and_type", unique: true, using: :btree
+
   create_table :wrong_accounts do |t|
     t.string :email
     t.timestamps
