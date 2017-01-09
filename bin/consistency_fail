@@ -1,19 +1,19 @@
 #!/usr/bin/env ruby
 
-rails_app_root = %w(spec/dummy test/dummy .).find { |path| File.exists?(File.expand_path(path, Dir.pwd)) }
+rails_app_root = %w(spec/dummy test/dummy).find { |path| File.exists?(File.expand_path(path, Dir.pwd)) } || ''
 
 begin
-  require File.join(Dir.pwd, rails_app_root, "config", "boot")
-rescue LoadError => e
+  require File.join(Dir.pwd, rails_app_root, 'config', 'boot')
+rescue LoadError
   puts "\nUh-oh! You must be in the root directory of a Rails project.\n"
   raise
 end
 
 require 'active_record'
-require File.join(Dir.pwd, rails_app_root, "config", "environment")
+require File.join(Dir.pwd, rails_app_root, 'config', 'environment')
 
 $:<< File.join(File.dirname(__FILE__), "..", "lib")
-require "consistency_fail"
+require 'consistency_fail'
 
 if ConsistencyFail.run
   exit 0
