@@ -17,18 +17,34 @@ database-level enforcement is lacking there as well.
 For more detail, see [my blog post on the
 subject](http://blog.8thlight.com/articles/2011/6/11/winning-at-consistency).
 
+
 ## Installation
 
-I'm currently only maintaining consistency\_fail for Rails 3. If you need or
-want Rails 2.3 support, I'd be happy to take patches based off the 0.1.1
-branch.
+You can install the gem directly:
 
     gem install consistency_fail
 
-Or, even better if you're using bundler, add it to your Gemfile, with the
-appropriate version number to match your Rails version.
+Or if you're using Bundler (which you probably are), add it to your Gemfile.
+
+    gem 'consistency_fail'
+
 
 ## Limitations
+
+The master branch should work for the following ActiveRecord versions:
+
+- 5.x
+- 4.x (*has a known issue around views*)
+- 3.x
+- 2.3 (on the `rails-2.3` branch)
+
+The known issue with views in ActiveRecord 4.x is that in this version, the
+connection adapter's `tables` method includes both tables and views. This means
+that without additional monkeypatches to the various connection adapters, we
+cannot reliably detect whether a given model is backed by a table or a view. I
+wouldn't mind monkeypatching a bounded set of adapters, but I don't want to be
+on the hook for arbitrary connection adapters that may require licenses to test
+(e.g. SQL Server, Oracle).
 
 consistency\_fail depends on being able to find all your `ActiveRecord::Base`
 subclasses with some `$LOAD_PATH` trickery. If any models are in a path either

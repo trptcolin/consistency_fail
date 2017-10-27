@@ -21,7 +21,7 @@ stop ignoring the C in ACID.
 EOF
   s.license = "MIT"
 
-  s.add_development_dependency "activerecord", "~>3.0"
+  s.add_development_dependency "activerecord", "~>5.0"
   s.add_development_dependency "sqlite3", "~>1.3"
   s.add_development_dependency "rspec", "~>3.2"
 
