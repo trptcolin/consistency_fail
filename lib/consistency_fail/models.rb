@@ -4,6 +4,7 @@ require 'consistency_fail/index'
 module ConsistencyFail
   class Models
     MODEL_DIRECTORY_REGEXP = /models/
+    IGNORE_DIRECTORY_REGEXP = /activestorage-\S*\/app\/models/
 
     attr_reader :load_path
 
@@ -12,7 +13,7 @@ module ConsistencyFail
     end
 
     def dirs
-      load_path.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp.to_s }
+      load_path.select { |lp| MODEL_DIRECTORY_REGEXP =~ lp.to_s unless IGNORE_DIRECTORY_REGEXP =~ lp.to_s}
     end
 
     def preload_all
