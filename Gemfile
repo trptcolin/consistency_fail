@@ -4,3 +4,7 @@ source "https://rubygems.org"
 gemspec
 
 gem 'pry'
+
+group :test do
+  gem 'activesupport', '~> 5.0'
+end

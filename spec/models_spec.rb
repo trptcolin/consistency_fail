@@ -1,5 +1,5 @@
 describe ConsistencyFail::Models do
-  
+
   def models(load_path)
     ConsistencyFail::Models.new(load_path)
   end
@@ -19,7 +19,7 @@ describe ConsistencyFail::Models do
     expect(models.dirs).to eq([Pathname.new("app/models")])
   end
 
-  it "preloads models by calling require_dependency" do
+  it "preloads models" do
     models = models(["foo/bar/baz", "app/models", "some/other/models"])
     allow(Dir).to receive(:glob).
         with(File.join("app/models", "**", "*.rb")).
@@ -28,9 +28,9 @@ describe ConsistencyFail::Models do
         with(File.join("some/other/models", "**", "*.rb")).
         and_return(["some/other/models/foo.rb"])
 
-    expect(Kernel).to receive(:require_dependency).with("app/models/user.rb")
-    expect(Kernel).to receive(:require_dependency).with("app/models/address.rb")
-    expect(Kernel).to receive(:require_dependency).with("some/other/models/foo.rb")
+    expect(Kernel).to receive(:require).with("app/models/user.rb")
+    expect(Kernel).to receive(:require).with("app/models/address.rb")
+    expect(Kernel).to receive(:require).with("some/other/models/foo.rb")
 
     models.preload_all
   end
@@ -44,5 +44,9 @@ describe ConsistencyFail::Models do
 
     expect(models([]).all).to eq([model_a, model_c, model_b])
   end
-  
+
+  it "preloads models successfully" do
+    models = models([File.join(File.dirname(__FILE__), "support/models")])
+    expect {models.preload_all}.not_to raise_error
+  end
 end

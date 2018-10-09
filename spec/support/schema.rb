@@ -118,4 +118,8 @@ ActiveRecord::Schema.define(version: 0) do
   execute 'CREATE VIEW new_correct_people AS '\
           'SELECT * FROM correct_people '\
           'WHERE created_at = updated_at'
+
+  create_table :blob do |t|
+    t.timestamps
+  end
 end
