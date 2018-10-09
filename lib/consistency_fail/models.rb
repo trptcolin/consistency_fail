@@ -17,8 +17,9 @@ module ConsistencyFail
 
     def preload_all
       self.dirs.each do |d|
-        Dir.glob(File.join(d, "**", "*.rb")).each do |model_filename|
-          Kernel.require_dependency model_filename
+        ruby_files = Dir.glob(File.join(d, "**", "*.rb")).sort
+        ruby_files.each do |model_filename|
+          Kernel.require model_filename
         end
       end
     end

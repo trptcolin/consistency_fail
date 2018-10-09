@@ -1,0 +1,2 @@
+module Blob::Edible
+end
