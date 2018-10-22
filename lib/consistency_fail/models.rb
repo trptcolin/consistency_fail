@@ -19,7 +19,7 @@ module ConsistencyFail
       self.dirs.each do |d|
         ruby_files = Dir.glob(File.join(d, "**", "*.rb")).sort
         ruby_files.each do |model_filename|
-          Kernel.require model_filename
+          Kernel.require_dependency model_filename
         end
       end
     end

@@ -28,9 +28,9 @@ describe ConsistencyFail::Models do
         with(File.join("some/other/models", "**", "*.rb")).
         and_return(["some/other/models/foo.rb"])
 
-    expect(Kernel).to receive(:require).with("app/models/user.rb")
-    expect(Kernel).to receive(:require).with("app/models/address.rb")
-    expect(Kernel).to receive(:require).with("some/other/models/foo.rb")
+    expect(Kernel).to receive(:require_dependency).with("app/models/user.rb")
+    expect(Kernel).to receive(:require_dependency).with("app/models/address.rb")
+    expect(Kernel).to receive(:require_dependency).with("some/other/models/foo.rb")
 
     models.preload_all
   end
