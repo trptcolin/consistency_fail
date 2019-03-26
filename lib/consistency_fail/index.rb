@@ -10,7 +10,7 @@ module ConsistencyFail
 
     def ==(other)
       self.table_name == other.table_name &&
-        self.columns.sort == other.columns.sort
+        self.columns.map(&:to_s).sort == other.columns.map(&:to_s).sort
     end
 
     private
